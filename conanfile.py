@@ -24,7 +24,7 @@ class LibiconvConan(ConanFile):
     name = "libiconv"
     description = "Convert text to and from Unicode"
     license = ("LGPL-2.0-or-later", "LGPL-2.1-or-later")
-    url = "https://github.com/conan-io/conan-center-index"
+    url = "https://github.com/Pix4D/libiconv"
     homepage = "https://www.gnu.org/software/libiconv/"
     topics = ("iconv", "text", "encoding", "locale", "unicode", "conversion")
 
@@ -38,6 +38,11 @@ class LibiconvConan(ConanFile):
         "shared": False,
         "fPIC": True,
     }
+
+    lib_version = "1.17.0"
+    revision = "0"
+
+    version = f"{lib_version}-{revision}"
 
     @property
     def _is_clang_cl(self):
@@ -64,7 +69,7 @@ class LibiconvConan(ConanFile):
             self.options.rm_safe("fPIC")
         self.settings.rm_safe("compiler.libcxx")
         self.settings.rm_safe("compiler.cppstd")
-        if Version(self.version) >= "1.17":
+        if Version(self.lib_version) >= "1.17":
             self.license = "LGPL-2.1-or-later"
         else:
             self.license = "LGPL-2.0-or-later"
@@ -75,11 +80,11 @@ class LibiconvConan(ConanFile):
     def build_requirements(self):
         if self._settings_build.os == "Windows":
             if not self.conf.get("tools.microsoft.bash:path", check_type=str):
-                self.tool_requires("msys2/cci.latest")
+                self.tool_requires("msys2/20220118-1@pix4d/stable")
             self.win_bash = True
 
     def source(self):
-        get(self, **self.conan_data["sources"][self.version], strip_root=True)
+        get(self, **self.conan_data["sources"][self.lib_version], strip_root=True)
 
     def generate(self):
         env = VirtualBuildEnv(self)
