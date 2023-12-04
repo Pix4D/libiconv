@@ -44,6 +44,10 @@ class LibiconvConan(ConanFile):
 
     version = f"{lib_version}-{revision}"
 
+    exports_sources = ["FindIconv.cmake"]
+
+    short_paths = True
+
     @property
     def _is_clang_cl(self):
         return self.settings.compiler == "clang" and self.settings.os == "Windows" and \
@@ -142,6 +146,8 @@ class LibiconvConan(ConanFile):
                 rename(self, os.path.join(self.package_folder, "lib", f"{import_lib}.dll.lib"),
                              os.path.join(self.package_folder, "lib", f"{import_lib}.lib"))
 
+        copy(self, "FindIconv.cmake", os.path.dirname(self.source_folder), self.package_folder)
+
     def package_info(self):
         self.cpp_info.set_property("cmake_find_mode", "both")
         self.cpp_info.set_property("cmake_file_name", "Iconv")
@@ -152,3 +158,8 @@ class LibiconvConan(ConanFile):
         self.cpp_info.names["cmake_find_package"] = "Iconv"
         self.cpp_info.names["cmake_find_package_multi"] = "Iconv"
         self.env_info.PATH.append(os.path.join(self.package_folder, "bin"))
+
+    def package_id(self):
+        # Make all options and dependencies (direct and transitive) contribute
+        # to the package id
+        self.info.requires.full_package_mode()

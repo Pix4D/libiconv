@@ -1,16 +1,19 @@
-from conans import ConanFile, CMake, tools
 import os
+from conans import ConanFile, CMake, tools
 
+class LibraryTestConan(ConanFile):
+    settings = 'os', 'compiler', 'build_type', 'arch'
+    generators = 'cmake'
 
-class TestPackageConan(ConanFile):
-    settings = "os", "compiler", "build_type", "arch"
-    generators = "cmake", "cmake_find_package"
+    def imports(self):
+        self.copy('*.dll',   src='bin', dst=os.path.join('install', 'bin'))
+        self.copy('*.dylib', src='lib', dst=os.path.join('install', 'lib'))
+        self.copy('*.so*',   src='lib', dst=os.path.join('install', 'lib'))
 
     def build(self):
         cmake = CMake(self)
-        cmake.configure()
-        cmake.build()
+        cmake.configure(defs={'CMAKE_INSTALL_PREFIX':'install'})
+        cmake.build(target='install')
 
     def test(self):
-        if not tools.cross_building(self):
-            self.run(os.path.join("bin", "test_package"), run_environment=True)
+        self.run(os.path.join('install', 'bin', 'testApp'))
