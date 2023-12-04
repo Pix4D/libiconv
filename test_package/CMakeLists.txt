@@ -1,10 +1,24 @@
-cmake_minimum_required(VERSION 3.1)
-project(test_package)
+cmake_minimum_required(VERSION 3.11)
+project(TestPackage)
 
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-conan_basic_setup(TARGETS)
+conan_set_find_paths()
 
-find_package(Iconv REQUIRED)
+set(CMAKE_CXX_STANDARD 11)
+set(CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
-add_executable(${PROJECT_NAME} test_package.c)
-target_link_libraries(${PROJECT_NAME} PRIVATE Iconv::Iconv)
+if (UNIX)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
+    if (APPLE)
+        set(CMAKE_INSTALL_RPATH "@executable_path/../lib")
+    else()
+        set(CMAKE_INSTALL_RPATH "$ORIGIN/../lib")
+    endif()
+endif()
+
+find_package(Iconv REQUIRED CONFIG)
+
+add_executable(testApp test_package.c)
+target_link_libraries(testApp Iconv::Iconv)
+install(TARGETS testApp RUNTIME DESTINATION "bin")
