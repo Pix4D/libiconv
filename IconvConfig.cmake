@@ -6,14 +6,14 @@ message(STATUS "CONAN_INCLUDE_DIRS_ICONV: ${CONAN_INCLUDE_DIRS_LIBICONV}")
 message(STATUS "CONAN_LIB_DIRS_ICONV: ${CONAN_LIB_DIRS_LIBICONV}")
 
 # Find the include dir and library
-find_path(Iconv_INCLUDE_DIR NAMES iconv.h PATHS ${CONAN_INCLUDE_DIRS_LIBICONV} NO_DEFAULT_PATH)
+find_path(Iconv_INCLUDE_DIRS NAMES iconv.h PATHS ${CONAN_INCLUDE_DIRS_LIBICONV} NO_DEFAULT_PATH)
 # Note: it is possible to use a list of known library names instead of CONAN_LIBS_MYLIB
 find_library(Iconv_LIBRARIES NAMES "iconv" PATHS ${CONAN_LIB_DIRS_LIBICONV} NO_DEFAULT_PATH)
 find_library(CHARSET_LIBRARY NAMES "charset" PATHS ${CONAN_LIB_DIRS_LIBICONV} NO_DEFAULT_PATH)
 
 # Validate that include dirs and library have valid paths. Sets MYLIB_FOUND and MyLib_FOUND. Stops running the finder if the library was not found
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(Iconv DEFAULT_MSG Iconv_INCLUDE_DIRS ICONV_LIBRARY)
+find_package_handle_standard_args(Iconv DEFAULT_MSG Iconv_INCLUDE_DIRS Iconv_LIBRARIES)
 mark_as_advanced(Iconv_LIBRARIES Iconv_INCLUDE_DIRS)
 
 # Declare target
