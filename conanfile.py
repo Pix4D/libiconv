@@ -3,7 +3,7 @@ from conans import ConanFile, CMake
 class libiconvConan(ConanFile):
     name = 'libiconv'
     lib_version = '1.15.0'
-    revision = '0'
+    revision = '1'
     version = '{}-{}'.format(lib_version, revision)
     settings = 'os', 'compiler', 'build_type', 'arch'
     description = 'Convert text to and from Unicode'
